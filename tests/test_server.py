@@ -1,10 +1,12 @@
+import json
+
 import pytest
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
 
 @pytest.mark.asyncio
-async def test_health_check_tool() -> None:
+async def test_search_knowledge_tool() -> None:
     server_params = StdioServerParameters(
         command="uv",
         args=[
@@ -16,22 +18,23 @@ async def test_health_check_tool() -> None:
     )
 
     async with (
-          stdio_client(server_params) as (read, write),
-          ClientSession(read, write) as session,
+        stdio_client(server_params) as (read, write),
+        ClientSession(read, write) as session,
     ):
-            await session.initialize()
-            tools = await session.list_tools()
+        await session.initialize()
 
-            assert any(
-                tool.name == "health_check"
-                for tool in tools.tools
-            )
+        result = await session.call_tool(
+            "search_knowledge",
+            {
+                "query": "How do I troubleshoot firewall connectivity",
+                "top_k": 5,
+            },
+        )
 
-            result = await session.call_tool(
-                "health_check",
-                {},
-            )
+        assert not result.is_error
+        assert len(result.content) == 1
 
-            assert result.content[0].text == (
-                "LISA MCP Server is healthy"
-            )
+        response = json.loads(result.content[0].text)
+
+        assert "results" in response
+        assert len(response["results"]) == 5
