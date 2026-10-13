@@ -8,7 +8,8 @@ from lisa_mcp_server.net_tools_client import NetToolsClient
 mcp = MCPServer("LISA MCP SERVER")
 
 net_tools_client = NetToolsClient(base_url=os.getenv("NET_TOOLS_API_URL", "http://127.0.0.1:8000"))
-internet_client = InternetClient(base_url=os.getenv("AGENT_SEARCH_API_URL", "http://127.0.0.1:3939"))
+# internet_client = InternetClient(base_url=os.getenv("AGENT_SEARCH_API_URL", "http://127.0.0.1:3939"))
+internet_client = InternetClient()
 
 @mcp.tool()
 def health_check() -> str:
