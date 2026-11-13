@@ -94,7 +94,7 @@ async def search_jira_tickets(jql: str, max_results: int = 20, next_page_token: 
     max_results: 1-100, default 20. next_page_token: token from the previous page.
     Results contain tickets, returned_count, is_last and next_page_token.
     Each ticket has ticket_id, ticket_key, ticket_url, subject, description, comments, status,
-    status_category, priority, department, labels, created and updated.
+    status_category, priority, labels, created and updated.
     Comments are fetched across all pages visible to the configured Jira account,
     newest-created first. Each has comment_id, body, author, created and updated.
     Use the comment timestamps to identify recent updates, including edited comments.
